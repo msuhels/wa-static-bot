@@ -110,6 +110,158 @@ async function sendButtons(to) {
   }
 }
 
+/**
+ * Send product selection buttons
+ * @param {string} to - Recipient phone number
+ */
+async function sendProductButtons(to) {
+  try {
+    await axios.post(
+      WHATSAPP_API_URL,
+      {
+        messaging_product: 'whatsapp',
+        to: to,
+        type: 'interactive',
+        interactive: {
+          type: 'button',
+          body: {
+            text: 'Here are our products:\n\nPlease select a product:'
+          },
+          action: {
+            buttons: [
+              {
+                type: 'reply',
+                reply: {
+                  id: 'product_a',
+                  title: 'Product A'
+                }
+              },
+              {
+                type: 'reply',
+                reply: {
+                  id: 'product_b',
+                  title: 'Product B'
+                }
+              },
+              {
+                type: 'reply',
+                reply: {
+                  id: 'product_c',
+                  title: 'Product C'
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    console.log(`✅ Product buttons sent to ${to}`);
+  } catch (error) {
+    console.error('❌ Error sending product buttons:', error.response?.data || error.message);
+  }
+}
+
+/**
+ * Send service selection buttons
+ * @param {string} to - Recipient phone number
+ */
+async function sendServiceButtons(to) {
+  try {
+    // WhatsApp interactive buttons are limited to 3 buttons
+    // We'll send first 3 services, then send remaining as separate message
+    await axios.post(
+      WHATSAPP_API_URL,
+      {
+        messaging_product: 'whatsapp',
+        to: to,
+        type: 'interactive',
+        interactive: {
+          type: 'button',
+          body: {
+            text: 'Here are our services:\n\nPlease select a service:'
+          },
+          action: {
+            buttons: [
+              {
+                type: 'reply',
+                reply: {
+                  id: 'service_a',
+                  title: 'Service A'
+                }
+              },
+              {
+                type: 'reply',
+                reply: {
+                  id: 'service_b',
+                  title: 'Service B'
+                }
+              },
+              {
+                type: 'reply',
+                reply: {
+                  id: 'service_c',
+                  title: 'Service C'
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    
+    // Send Service D as a separate button message (WhatsApp limitation: max 3 buttons)
+    setTimeout(async () => {
+      await axios.post(
+        WHATSAPP_API_URL,
+        {
+          messaging_product: 'whatsapp',
+          to: to,
+          type: 'interactive',
+          interactive: {
+            type: 'button',
+            body: {
+              text: 'Or choose this service:'
+            },
+            action: {
+              buttons: [
+                {
+                  type: 'reply',
+                  reply: {
+                    id: 'service_d',
+                    title: 'Service D'
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+    }, 1000); // Send after 1 second delay
+    
+    console.log(`✅ Service buttons sent to ${to}`);
+  } catch (error) {
+    console.error('❌ Error sending service buttons:', error.response?.data || error.message);
+  }
+}
+
 // ============================================
 // WEBHOOK ENDPOINTS
 // ============================================
@@ -179,15 +331,31 @@ app.post('/api/webhooks/whatsapp', async (req, res) => {
               const buttonId = message.interactive.button_reply.id;
               console.log(`🔘 Button clicked: ${buttonId}`);
 
-              // Handle button clicks
+              // Handle main menu button clicks
               if (buttonId === 'products') {
-                // Send products list
-                const productsMessage = `Here are our products:\n\n1. Product A\n2. Product B\n3. Product C`;
-                await sendTextMessage(from, productsMessage);
+                // Send product selection buttons
+                await sendProductButtons(from);
               } else if (buttonId === 'services') {
-                // Send services list
-                const servicesMessage = `Here are our services:\n\n1. Service A\n2. Service B\n3. Service C\n4. Service D`;
-                await sendTextMessage(from, servicesMessage);
+                // Send service selection buttons
+                await sendServiceButtons(from);
+              } 
+              // Handle product selections
+              else if (buttonId === 'product_a') {
+                await sendTextMessage(from, 'You have selected Product A, we will contact you shortly.');
+              } else if (buttonId === 'product_b') {
+                await sendTextMessage(from, 'You have selected Product B, we will contact you shortly.');
+              } else if (buttonId === 'product_c') {
+                await sendTextMessage(from, 'You have selected Product C, we will contact you shortly.');
+              }
+              // Handle service selections
+              else if (buttonId === 'service_a') {
+                await sendTextMessage(from, 'You have selected Service A, we will contact you shortly.');
+              } else if (buttonId === 'service_b') {
+                await sendTextMessage(from, 'You have selected Service B, we will contact you shortly.');
+              } else if (buttonId === 'service_c') {
+                await sendTextMessage(from, 'You have selected Service C, we will contact you shortly.');
+              } else if (buttonId === 'service_d') {
+                await sendTextMessage(from, 'You have selected Service D, we will contact you shortly.');
               }
             }
           }
