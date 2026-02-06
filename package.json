@@ -1,0 +1,27 @@
+{
+  "name": "whatsapp-static-bot",
+  "version": "1.0.0",
+  "description": "A static WhatsApp bot using WhatsApp Cloud API with Products and Services buttons",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "whatsapp-cloud-api",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/node": "^5.5.32",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
