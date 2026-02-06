@@ -24,6 +24,10 @@ const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 // WhatsApp API base URL
 const WHATSAPP_API_URL = `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`;
 
+app.get('/', (req, res) => {
+  res.json({message:'Welcome to the WhatsApp Bot!'});
+});
+
 // ============================================
 // HELPER FUNCTIONS
 // ============================================
