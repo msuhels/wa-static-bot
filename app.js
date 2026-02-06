@@ -119,7 +119,7 @@ async function sendButtons(to) {
  * Webhook verification endpoint for Meta
  * Meta will send a verification request with challenge token
  */
-app.get('/webhook', (req, res) => {
+app.get('/api/webhooks/whatsapp', (req, res) => {
   // Parse query parameters
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
@@ -146,7 +146,7 @@ app.get('/webhook', (req, res) => {
  * Webhook event receiver for incoming WhatsApp messages
  * Handles user messages and button clicks
  */
-app.post('/webhook', async (req, res) => {
+app.post('/api/webhooks/whatsapp', async (req, res) => {
   try {
     // Extract the body from the request
     const body = req.body;
@@ -234,6 +234,6 @@ app.post('/webhook', async (req, res) => {
 app.listen(PORT, () => {
   console.log('🚀 WhatsApp Bot Server Started');
   console.log(`📡 Listening on port ${PORT}`);
-  console.log(`🔗 Webhook URL: http://localhost:${PORT}/webhook`);
+  console.log(`🔗 Webhook URL: http://localhost:${PORT}/api/webhooks/whatsapp`);
   console.log('✅ Ready to receive messages!');
 });
