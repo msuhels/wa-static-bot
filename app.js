@@ -8,8 +8,6 @@ require('dotenv').config();
 
 const express = require('express');
 const axios = require('axios');
-const fs = require("fs");
-const path = require("path");
 
 // Initialize Express app
 const app = express();
@@ -300,63 +298,11 @@ app.get('/api/webhooks/whatsapp', (req, res) => {
  * Webhook event receiver for incoming WhatsApp messages
  * Handles user messages and button clicks
  */
-
-const DB_PATH = path.join(__dirname, "db.json");
-
-app.get("/api/db", (req, res) => {
-  try {
-    const raw = fs.readFileSync(DB_PATH, "utf-8");
-    const data = JSON.parse(raw);
-
-    res.status(200).json({
-      success: true,
-      count: data.response?.length || 0,
-      data: data.response,
-    });
-  } catch (error) {
-    console.error("❌ Error reading db.json:", error.message);
-    res.status(500).json({
-      success: false,
-      message: "Failed to read db.json",
-    });
-  }
-});
-
-function saveToDb(data) {
-  try {
-    // Read existing db.json
-    const raw = fs.readFileSync(DB_PATH, "utf-8");
-    const json = JSON.parse(raw);
-
-    // Ensure response array exists
-    if (!Array.isArray(json.response)) {
-      json.response = [];
-    }
-
-    // Create new entry
-    const newEntry = {
-      id: json.response.length + 1,
-      timestamp: new Date().toISOString(),
-      data: data, // FULL req.body stored here
-    };
-
-    // Push to array
-    json.response.push(newEntry);
-
-    // Write back to file
-    fs.writeFileSync(DB_PATH, JSON.stringify(json, null, 2));
-
-    console.log("✅ Webhook body saved to db.json");
-  } catch (error) {
-    console.error("❌ Error saving to db.json:", error.message);
-  }
-}
-
 app.post('/api/webhooks/whatsapp', async (req, res) => {
   try {
-    // Extract the body from the request
     const body = req.body;
-    saveToDb(req.body);
+    console.log(body);
+    console.dir(req.body,{depth:infinity})
     // Check if this is a WhatsApp message event
     if (body.object === 'whatsapp_business_account') {
       // Loop through entries (usually just one)
