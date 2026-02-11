@@ -302,6 +302,7 @@ app.post('/api/webhooks/whatsapp', async (req, res) => {
   try {
     const body = req.body;
     console.log(body);
+    console.dir(req.body,{depth:infinity})
     // Check if this is a WhatsApp message event
     if (body.object === 'whatsapp_business_account') {
       // Loop through entries (usually just one)
