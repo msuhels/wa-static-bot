@@ -303,6 +303,25 @@ app.get('/api/webhooks/whatsapp', (req, res) => {
 
 const DB_PATH = path.join(__dirname, "db.json");
 
+app.get("/api/db", (req, res) => {
+  try {
+    const raw = fs.readFileSync(DB_PATH, "utf-8");
+    const data = JSON.parse(raw);
+
+    res.status(200).json({
+      success: true,
+      count: data.response?.length || 0,
+      data: data.response,
+    });
+  } catch (error) {
+    console.error("❌ Error reading db.json:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to read db.json",
+    });
+  }
+});
+
 function saveToDb(data) {
   try {
     // Read existing db.json
