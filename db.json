@@ -1,9 +1,23 @@
 {
-    "response": [
-        {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john.doe@example.com"
-        }
-    ]
+  "response": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-02-11T10:12:55.764Z",
+      "data": {
+        "name": "new user"
+      }
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-02-11T10:13:26.420Z",
+      "data": {
+        "name": "new user"
+      }
+    }
+  ]
 }
