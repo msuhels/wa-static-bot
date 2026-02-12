@@ -2,7 +2,6 @@
 node_modules/
 
 # Environment variables (contains secrets!)
-.env
 
 # Logs
 *.log
@@ -13,7 +12,11 @@ npm-debug.log*
 Thumbs.db
 
 # IDE files
-.vscode/
 .idea/
 *.swp
 *.swo
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
+config.bat
+branch_structure.json

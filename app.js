@@ -25,7 +25,7 @@ const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 const WHATSAPP_API_URL = `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`;
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the WhatsApp Bot!' });
+  res.json({message:'Welcome to the WhatsApp Bot!'});
 });
 
 // ============================================
@@ -220,7 +220,7 @@ async function sendServiceButtons(to) {
         }
       }
     );
-
+    
     // Send Service D as a separate button message (WhatsApp limitation: max 3 buttons)
     setTimeout(async () => {
       await axios.post(
@@ -255,7 +255,7 @@ async function sendServiceButtons(to) {
         }
       );
     }, 1000); // Send after 1 second delay
-
+    
     console.log(`✅ Service buttons sent to ${to}`);
   } catch (error) {
     console.error('❌ Error sending service buttons:', error.response?.data || error.message);
@@ -300,9 +300,9 @@ app.get('/api/webhooks/whatsapp', (req, res) => {
  */
 app.post('/api/webhooks/whatsapp', async (req, res) => {
   try {
+    // Extract the body from the request
     const body = req.body;
-    console.log(body);
-    console.dir(req.body,{depth:infinity})
+
     // Check if this is a WhatsApp message event
     if (body.object === 'whatsapp_business_account') {
       // Loop through entries (usually just one)
@@ -338,7 +338,7 @@ app.post('/api/webhooks/whatsapp', async (req, res) => {
               } else if (buttonId === 'services') {
                 // Send service selection buttons
                 await sendServiceButtons(from);
-              }
+              } 
               // Handle product selections
               else if (buttonId === 'product_a') {
                 await sendTextMessage(from, 'You have selected Product A, we will contact you shortly.');
